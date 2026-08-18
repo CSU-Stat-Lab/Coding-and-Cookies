@@ -59,7 +59,7 @@ Today we will:
 
 Prior to this workshop you should have already installed both R and RStudio. If not, please do so now!
 
-??ERIC: Link to git hub installation instructions???
+For instructions, see: <https://csu-stat-lab.github.io/Coding-and-Cookies/>
 
 ## Organize your files
 
