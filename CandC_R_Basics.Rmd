@@ -67,7 +67,7 @@ For instructions, see: <https://csu-stat-lab.github.io/Coding-and-Cookies/>
 
 2.  Download workshop files and save them in your `CandC_R_Basics` folder (that you just created).
 
-??ERIC: Link to wherever files are saved ???
+<https://csu-stat-lab.github.io/Coding-and-Cookies/>
 
 - `CandC_R_Basics.Rmd`
 - `combined.csv`
