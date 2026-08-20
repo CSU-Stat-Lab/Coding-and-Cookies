@@ -1,0 +1,395 @@
+---
+title: "CSU Coding and Cookies: Tidy Data in R"
+output: word_document
+---
+
+```{r setup, include=FALSE, message = FALSE, warning = FALSE}
+knitr::opts_chunk$set(echo=TRUE)
+
+# install.packages("pacman")
+pacman::p_load(knitr, tidyverse, fivethirtyeight)
+```
+
+# Welcome and Introductions
+
+Welcome!
+
+Instructor(s) introduction(s)
+
+Participants: Tell us
+
+- your name,
+- department, and
+- Do you have any experience with data cleaning or reformatting? If so, what kinds of tasks have you done?
+
+# Outline
+
+Today we will learn how to use the `tidyverse` package to manipulate data.
+
+The `tidyverse` package is a collection of packages that includes: `dplyr`, `tidyr`, `ggplot2`, and many more.
+
+Topics include
+
+- filtering rows
+- selecting columns
+- creating new variables
+- grouping data
+- summarizing data
+- reshaping data
+
+The goal is to learn a small number of functions that can accomplish many common data management tasks.
+
+# Getting Started
+
+## Load the data
+
+Today we will use the **biopics** data from the **fivethirtyeight** package.
+
+```{r}
+citation("fivethirtyeight")
+
+data("biopics")
+
+```
+
+Before working with any data set, it is a good idea to understand what it contains.
+
+```{r}
+str(biopics)
+head(biopics)
+summary(biopics)
+```
+
+Notice that
+
+- each row represents one movie
+- each column represents one variable
+- different columns have different data types
+
+### Your Turn
+
+Answer the following questions.
+
+- What are these data about (hint: see the help file for the data set)? 
+- How many observations are in the data set?
+- How many variables?
+- Which variables are numeric?
+- Which variables are character?
+
+# The dplyr verbs
+
+Most data manipulation in the tidyverse is done with a handful of functions, often called **verbs**.
+
+Some of the most useful are
+
+- `filter()`
+- `select()`
+- `mutate()`
+- `group_by()`
+- `summarize()`
+- `arrange()`
+
+These functions all take a data frame (or tibble) as input and return another tibble.
+
+A `data.frame` object is the primary data structure from base R.  A `tibble` object is very similar, but is part of `tidyverse`.
+
+# Filtering Rows
+
+Often we want only observations meeting certain conditions.
+
+The function `filter()` keeps rows that satisfy one or more logical conditions.
+
+## Example
+
+Select only films released in the UK after 1990.
+
+```{r}
+biopicsUK1990 <-
+    filter(biopics,
+           country=="UK",
+           year_release>1990)
+
+biopicsUK1990
+```
+
+Notice that
+
+- the first argument is always the data frame
+- additional arguments are logical conditions
+- only rows meeting **all** conditions are kept
+
+Common comparison operators include
+
+|Operator|Meaning|
+|---------|-------|
+|`==`|equal to|
+|`!=`|not equal to|
+|`>`|greater than|
+|`<`|less than|
+|`>=`|greater than or equal|
+|`<=`|less than or equal|
+
+### Your Turn
+
+Create a data frame called `biopCan` containing only movies from Canada.
+
+```{r}
+
+```
+
+### Your Turn
+
+Create a data frame containing only movies released after 2010.
+
+```{r}
+
+```
+
+# Selecting Columns
+
+Sometimes we want fewer variables rather than fewer observations.
+
+The `select()` function keeps only the columns we specify.
+
+```{r}
+smallData <-
+    select(biopics,
+           title,
+           year_release,
+           country)
+
+smallData
+```
+
+Notice that the number of rows stays the same, but the number of columns changes.
+
+### Your Turn
+
+Create a data frame containing only
+
+- title
+- lead_actor_actress
+- box_office
+
+```{r}
+
+```
+
+# Combining Operations with the Pipe
+
+Instead of creating many intermediate data sets, we can connect operations together using the pipe operator `|>`.
+
+Compared to the `dplyr` “verbs”, the pipe operator acts like the word (adverb) “then”.
+
+The pipe sends the output from one step into the next step.
+
+Instead of
+
+```r
+x <- filter(...)
+y <- select(x,...)
+```
+
+we can write
+
+```{r}
+biopics |>
+    filter(country=="UK",
+           year_release>1990) |>
+    select(title,
+           subject_sex,
+           box_office)
+```
+
+Many people find this easier to read because the analysis proceeds from top to bottom.
+
+### Your Turn
+
+Write a pipeline that
+
+- keeps only Canadian movies
+- selects only the title and box office columns
+
+```{r}
+
+```
+
+# Creating New Variables
+
+The `mutate()` function creates new columns.
+
+Suppose we want to know which decade each movie belongs to.
+
+```{r}
+biopicsDec <-
+    biopics |>
+    mutate(decade=floor(year_release/10)*10)
+
+head(biopicsDec)
+```
+
+The original variables remain, and a new column is added.
+
+### Your Turn
+
+Create a variable called `box_millions` that equals `box_office/1000000`
+
+```{r}
+
+```
+
+# Grouping Data
+
+Many analyses involve calculating summaries for groups.
+
+The `group_by()` function tells R which groups should be analyzed separately.
+
+By itself, `group_by()` changes nothing that you can see.
+
+```{r}
+biopics |>
+    group_by(country)
+```
+
+Its usefulness comes when it is combined with `summarize()`.
+
+# Summarizing Data
+
+The `summarize()` function reduces many observations to one or more summary statistics.
+
+For example, compute the mean box office by country.
+
+```{r}
+biopics |>
+    drop_na(box_office) |> # See ?drop_na to learn about this function.
+    group_by(country) |>
+    summarize(
+        Mean=mean(box_office),
+        SD=sd(box_office),
+        N=n()
+    )
+```
+
+Notice
+
+- missing values were removed first
+- each country now has one row
+- we calculated three summaries at once
+
+### Your Turn
+
+Calculate
+
+- the mean box office
+- the sample size
+
+for each value of `subject_sex`.
+
+```{r}
+
+```
+
+# Sorting Results
+
+The `arrange()` function changes the order of rows.
+
+```{r}
+biopics |>
+    drop_na(box_office) |>
+    group_by(country) |>
+    summarize(
+        Mean=mean(box_office)
+    ) |>
+    arrange(desc(Mean))
+```
+
+The country with the largest average box office now appears first.
+
+### Your Turn
+
+Arrange the countries from smallest to largest average box office.
+
+```{r}
+
+```
+
+# Reshaping Data
+
+Sometimes we want data to be wider or longer.
+
+The **tidyr** package provides two important functions
+
+- `pivot_wider()`
+- `pivot_longer()`
+
+## Wide Data
+
+Create one column for each subject sex.
+
+```{r}
+dec_box <- biopicsDec |>
+    drop_na(box_office) |>
+    group_by(decade, subject_sex) |>
+    summarize(Mean=mean(box_office)) |>
+    pivot_wider(
+        names_from=subject_sex,
+        values_from=Mean
+    )
+```
+
+## Long Data
+
+Convert summary statistics into a longer format.
+
+```{r}
+dec_box |>
+    pivot_longer(
+        cols=-decade,
+        names_to="Statistic",
+        values_to="Value"
+    )
+```
+
+### Your Turn
+
+Look at the output of each pivot.
+
+Discuss with someone near you
+
+- Which output is wider?
+- Which output is longer?
+- When might each format be useful?
+
+# Putting Everything Together
+
+The following pipeline performs a complete analysis.
+
+```{r}
+biopics |>
+    drop_na(box_office) |>
+    mutate(decade=floor(year_release/10)*10) |>
+    group_by(decade) |>
+    summarize(
+        Mean=mean(box_office),
+        SD=sd(box_office),
+        N=n()
+    ) |>
+    arrange(decade)
+```
+
+Notice how each step performs one simple task.
+
+This style of programming is one of the major strengths of the tidyverse.
+
+# Need Help?
+
+Learning R is an ongoing process. You do not need to memorize everything.
+
+Useful resources include:
+
+- CSU Statistics Laboratory (<https://statlab.colostate.edu/>)
+- R documentation and help pages
+- R cheat sheets (<https://opensource.posit.co/resources/cheatsheets/>)
+- CSU Libraries Coding Support Hub (<https://codingsupport.colostate.edu/r/>)
+- CSU Data Management Services (<https://lib.colostate.edu/services/data-management/>)
+

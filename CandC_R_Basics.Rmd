@@ -1,5 +1,5 @@
 ---
-title: 'Coding and Cookies: R Basics'
+title: 'CSU Coding and Cookies: R Basics'
 output: html_document
 ---
 
