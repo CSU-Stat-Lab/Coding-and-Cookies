@@ -1,0 +1,447 @@
+---
+title: 'CSU Coding and Cookies: Data Visualization Using ggplot2'
+output: html_document
+---
+
+```{r setup, include=FALSE, message = FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+# Un-comment the following line if tidyverse is not installed on your machine.
+# install.packages("tidyverse")
+library( "tidyverse" )
+```
+
+Based on: <https://datacarpentry.github.io/R-ecology-lesson/visualizing-ggplot.html>
+
+# Welcome and Introductions
+
+Welcome
+
+Instructor(s) introduction(s)
+
+Participants: Tell us
+
+- your name,
+- department and
+- Do you have any experience with data visualization? If so, what kinds of graphs have you made?
+
+# Outline
+
+- Why `ggplot`?
+- How to use it
+  - basic elements (data, aesthetics, geoms)
+  - modifications (transparency, color, grouping)
+  - themes (modifying default, using premade)
+- Exporting plots (`ggsave`)
+
+Today we will learn how to use the `ggplot2` package to make (beautiful!) graphs. 
+
+`ggplot2` is part of `tidyverse` which also includes `dplyr`, `tidyr` and more.
+
+# Why `ggplot2`?
+
+- One of the most popular data visualization packages
+- Makes highly customizable graphs, suitable for publication
+- Layered syntax via `+` operator
+- Automatic Legends and Scaling
+- Part of the `tidyverse` ecosystem
+- General help page: <https://ggplot2.tidyverse.org>
+
+# Getting Started 
+
+## Organize your files
+
+1.  Create a folder called `CandC_R_ggplot` somewhere on your computer.
+2.  Download workshop files and save them in your `CandC_R_gglot` folder (that you just created).
+
+<https://csu-stat-lab.github.io/Coding-and-Cookies/>
+
+- `CandC_R_ggplot.Rmd`
+- ` surveys_complete.csv`
+
+Keeping the `.Rmd` and `.csv` files in the same exact folder will make importing data easier.
+
+3.  Open `CandC_R_Basics.Rmd` in RStudio.
+
+## Load Packages
+
+`tidyverse` is loaded in the first code chunk of this `.Rmd` file.  Today, we will not require any further packages.
+
+## Data Introduction
+
+**Data set**: A survey of small animals.  
+
+Data are stored as a data frame object in R.
+
+**Instructor**: show them where the data are to download and to where they should be downloaded.
+
+<https://csu-stat-lab.github.io/Coding-and-Cookies/>
+
+- **Rows**: observations of individual animals
+- **Columns**: Variables that describe the animals
+
+Because the `.Rmd` and `.csv` files are in the same folder, we can read the file using:
+
+```{r}
+## Code obtained from Data Carpentry Ecology Lesson
+####  http://www.datacarpentry.org/R-ecology-lesson/04-visualization-ggplot2.html
+
+# Load the data 
+surveys_complete <- read.csv("surveys_complete_77_89.csv")
+```
+
+- Take a look at the data
+
+```{r}
+str( surveys_complete )
+```
+
+## Check In
+
+**Instructor:**
+
+- From Packages tab, show `ggplot` loaded (checked) 
+- Show `surveys_complete` in the environment.
+- Check if anyone had trouble importing the data or loading ggplot2. 
+
+
+- It is generally a good idea to convert character variables to type factor if they are actually factor variables.
+    - Much of the code below will work as expected if they are kept as character variables, but it is a good habit to convert them as some functions will treat character variables differently from factor variables.
+
+- Recall that the "pipe" operator in base R is the combination of symbols `|>`, which can be read as the (adverb) "and then".  
+
+In the code below, the first line assigns `surveys_complete` to itself (if you don't do this step, it will not save what comes next after the `|>` instances), "and then" using the `surveys_complete` object, it converts `species_id` to a factor, and so on.  Note that multiple pipe commands are employed.
+
+```{r}
+surveys_complete <- surveys_complete |>
+  mutate( species_id = as_factor( species_id ) ) |>
+  mutate( sex = as_factor( sex ) ) |>
+  mutate( genus = as_factor( genus ) ) |>
+  mutate( species = as_factor( species ) ) |>
+  mutate( taxa = as_factor( taxa ) ) |>
+  mutate( plot_type = as_factor( plot_type ) )
+
+str( surveys_complete )
+```
+
+# Opening Examples
+
+**Instructor**: before spending time on all the details, demonstrate what `ggplot2` can do with the following examples.  
+
+## Example 1
+
+```{r}
+ggplot(data = surveys_complete, 
+            aes(x = weight, 
+                   y = hindfoot_length,
+    color = genus,
+    group = genus)) + 
+geom_point(alpha = 0.2) + 
+geom_smooth() +
+labs(x = "weight (g)", y = "hindfoot length (mm)",title = "Example 1")
+
+```
+
+In just a couple of lines, we asked `ggplot2` to:
+
+-	take a data set (surveys_complete)
+-	create a scatterplot (geom_point) of hindfoot_length vs weight (aes)
+-	color and group by genus with legend created automatically
+-	add a smooth curve by genus (geom_smooth)
+-	customize the axis labels and title (labs)
+
+We don't need to understand every part of this code yet. By the end of the workshop, you will understand what these pieces mean.
+
+## Example 2
+
+```{r}
+ggplot(data = surveys_complete, 
+            aes(x = weight, 
+                   y = hindfoot_length)) + 
+geom_point(alpha = 0.2) + 
+geom_smooth() +
+facet_wrap( ~ genus) +
+labs(x = "weight (g)",
+        y = "hindfoot length (mm)",
+        title = "Example 2")
+```
+
+Wow! We made 8 neatly formatted and labeled plots with minimal effort.  
+
+
+# Scatterplots
+
+## Basic graph elements
+
+`ggplot(data = <DATA>,` `mapping = aes(<MAPPINGS>)) +` `<GEOM_FUNCTION>()`
+
+- `ggplot()` creates a plot. Must give it:
+  - a data object `ggplot( data = surveys_complete )` 
+  - a mapping using `aes`
+  - then add layers, such as what type of plot to make. Many plot types are available, such as
+    - `geom_point` (a point, or scatter, plot)
+    - `geom_jitter` (a point plot whose points are jittered to limit overlapping points)
+    - `geom_dotplot` (similar to `geom_jitter` but cleaner)
+    - `geom_boxplot` (box plots)
+    - `geom_bar` (bar plots: creates data counts before plotting)
+    - `geom_col` (like `geom_bar` but plots the actual data without first making counts)
+    - `geom_histogram`
+
+- **Step 1**: specify the data to be plotted. The following code opens a plot window, but does not graph anything
+
+The following code simply makes a blank plot.
+
+```{r}
+ggplot( data = surveys_complete )
+```
+
+
+- **Step 2**: specify what to put on each axis. The following code opens a plot window and draws axes.
+
+The following makes a blank plot but with axes added.
+
+```{r}
+ggplot(data = surveys_complete, mapping = aes(x = weight, 
+                                      y = hindfoot_length))
+```
+
+- **Step 3**: specify the geometry. opens a plot window, draws axes, and draw points for each row of the data frame.
+
+```{r}
+ggplot(data = surveys_complete, 
+       aes(x = weight, y = hindfoot_length)) +
+  geom_point()
+```
+
+- **Alternate Step 3**: plotting with `dplyr`.
+
+```{r}
+surveys_complete |>
+  ggplot(aes(x = weight, y = hindfoot_length)) +
+  geom_point()
+```
+
+- Add transparency with the alpha argument to `geom_point`.
+
+```{r}
+ggplot(data = surveys_complete, 
+       aes(x = weight, y = hindfoot_length)) + 
+  geom_point(alpha = 0.1)
+```
+
+- Add color by species with color argument to `aes`.
+
+```{r}
+ggplot(data = surveys_complete, 
+       aes(x = weight, y = hindfoot_length, color = species_id)) + 
+  geom_point(alpha = 0.1)
+```
+
+- `aes` argument to `ggplot` specifies for the whole graph.
+
+```{r}
+ggplot(data = surveys_complete, 
+       aes(x = weight, y = hindfoot_length, color=species_id)) + 
+  geom_point(alpha = 0.1)
+```
+
+### Your turn
+
+Use the previous example as a starting point.
+
+- Add color to the data points according to the plot from which the sample was taken (`plot_id`).
+
+**Hint**: Check the class for `plot_id`. Consider changing the class of `plot_id` from integer to factor. Why does this change how R makes the graph?
+
+```{r}
+
+```
+
+# Boxplots
+
+- Make a boxplot
+
+```{r}
+ggplot(data = surveys_complete, 
+       aes(x = species_id, y = hindfoot_length)) +
+  geom_boxplot()
+```
+
+**Instructor:** briefly remind everyone what a boxplot shows (ex: median, min, max)
+
+- Overlay points on a boxplot
+
+```{r}
+ggplot(data = surveys_complete, 
+       aes(x = species_id, y = hindfoot_length)) + 
+  geom_boxplot() +
+  geom_jitter()
+```
+
+**Instructor**: Explain what is meant by "jitter".
+
+## Your turn
+
+Make the same plot as above, but use `geom_point` instead of `geom_jitter`.
+
+### Your turn
+
+Plot the same data as in the previous example, but as a Violin plot
+
+**Hint**: see `?geom_violin`.
+
+- What information does this plot give you about the data that a box plot does not?
+
+```{r}
+
+```
+
+# Time series data
+
+- reshape the data
+
+**Instructor**: show the features of `tally` and explain what happens here.
+
+```{r}
+yearly_counts <- surveys_complete |> 
+  group_by(year, species_id) |> 
+  tally()
+```
+
+- Plot `n` vs. `year`
+
+```{r}
+ggplot(data = yearly_counts, aes(x = year, y = n)) + 
+  geom_line()
+```
+
+- One line for each species
+
+```{r}
+ggplot(data = yearly_counts, 
+       aes(x = year, y = n, group = species_id)) + 
+  geom_line()
+```
+
+- add color by species
+
+```{r}
+ggplot(data = yearly_counts, 
+       aes(x = year, y = n, group = species_id, 
+           color = species_id)) +
+  geom_line()
+```
+
+### Your turn
+
+Use what you just learned to create a plot that depicts how the average weight of each species changes through the years.
+
+**Hint** the functions `group_by` along with `summarize` may be very useful here.  It might also be useful to remove missing values before calling these functions.
+
+```{r}
+
+```
+
+# Themes
+
+## Using pre-made themes
+
+- Apply a theme (see `?theme_bw` for other themes)
+
+```{r}
+ggplot(data = yearly_counts, 
+       aes(x = year, y = n, color = species_id)) + 
+  geom_line() + 
+  theme_bw() 
+```
+
+## Customizing themes
+
+- Change axis labels and titles
+
+```{r}
+ggplot(data = yearly_counts, 
+       aes(x = year, y = n, color = species_id)) + 
+  geom_line() + 
+  labs(title = 'Observed species in Time', 
+       x = 'Year of observation', 
+       y = 'Count', color = 'Species') + 
+  theme_bw()
+```
+
+# Layering geoms
+
+It is possible to layer more than one type of plot onto another (e.g., when we added points to our box plot example).  Here is another example where we add a smooth curve fit to a point plot.
+
+```{r}
+ggplot(data = surveys_complete, 
+            aes(x = weight, 
+                   y = hindfoot_length,
+    color = genus,
+    group = genus)) + 
+geom_point(alpha = 0.2) + 
+geom_smooth() +
+labs(x = "weight (g)", y = "hindfoot length (mm)",title = "Example 1")
+
+```
+
+# Creating panels of plots
+
+Panels of plots are called "facets" in `ggplot2`.  Here is an example using `facet_wrap`.
+
+**Instructor**: Describe the formula argument.
+
+```{r}
+ggplot(data = surveys_complete, 
+            aes(x = weight, 
+                   y = hindfoot_length)) + 
+geom_point(alpha = 0.2) + 
+geom_smooth() +
+facet_wrap( ~ genus) +
+labs(x = "weight (g)",
+        y = "hindfoot length (mm)",
+        title = "Example 2")
+```
+
+# Save your plot
+
+## save plot to a variable
+
+```{r}
+my_plot <- ggplot(data = yearly_counts, 
+                  aes(x = year, y = n, color = species_id)) + 
+  geom_line() + 
+  labs(title = 'Observed species in time', 
+       x = 'Year of observation', 
+       y = 'Number of species', color = 'Species') + 
+  theme_bw() + 
+  theme(axis.text.x = element_text(colour="grey20", 
+                                   size=12, angle=90, 
+                                   hjust=.5, vjust=.5), 
+        axis.text.y = element_text(colour="grey20", size=12), 
+        text=element_text(size=16, family="Arial"))
+```
+
+## save plot to a file
+
+```{r}
+ggsave("name_of_file.png", my_plot, width=15, height=10)
+```
+
+Finally, it is good practice to cite software and packages that you use for your publications.  To cite `ggplot2` (and similarly for other packages) run the following code:
+
+```{r}
+citation("ggplot2")
+```
+
+# Need Help?
+
+Learning R is an ongoing process. You do not need to memorize everything.
+
+Useful resources include:
+
+- CSU Statistics Laboratory (<https://statlab.colostate.edu/>)
+- R documentation and help pages
+- R cheat sheets (<https://opensource.posit.co/resources/cheatsheets/>)
+- CSU Libraries Coding Support Hub (<https://codingsupport.colostate.edu/r/>)
+- CSU Data Management Services (<https://lib.colostate.edu/services/data-management/>)
+
