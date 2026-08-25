@@ -631,7 +631,7 @@ The goal today is to learn the basic ideas that will make the more advanced appr
 - First, install the package.
   - This step needs to be done only once (unless you install a new version of R)
 
-```{r}
+```{r eval = FALSE}
 install.packages( "extRemes" )
 ```
 
@@ -639,7 +639,7 @@ install.packages( "extRemes" )
   - This step must be performed for every new instance of R to use the package
   - You will often get warnings about having a different version of R than that under which the package was last uploaded. These warnings can usually be ignored.
 
-```{r}
+```{r eval = FALSE}
 library( "extRemes" )
 ```
 
@@ -648,7 +648,7 @@ library( "extRemes" )
 
 Some package developers spend a lot of time creating the packages, and in some cases they may need to demonstrate its impact, so always consider citing packages that you make use of in your published work. To cite a package, use `citation("pkgname")`. For example:
 
-```{r}
+```{r eval = FALSE}
 citation( "extRemes" )
 ```
 

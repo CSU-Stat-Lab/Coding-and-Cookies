@@ -6,8 +6,12 @@ output: html_document
 ```{r setup, include=FALSE, message = FALSE, warning = FALSE}
 knitr::opts_chunk$set(echo=TRUE)
 
-# install.packages("pacman")
-pacman::p_load(knitr, tidyverse, fivethirtyeight)
+# install.packages("knitr")
+# install.packages("tidyverse")
+# install.packages("fivethirtyeight")
+library( "knitr")
+library( "tidyverse" )
+library( "fivethirtyeight" )
 ```
 
 # Welcome and Introductions
@@ -66,6 +70,15 @@ citation("fivethirtyeight")
 data("biopics")
 
 ```
+
+## Check In 
+
+**Instructor:**
+
+- From Packages tab, show `dplyr` and `tidyr`loaded (checked)
+- Show `bipoics` in the environment.
+- Check if anyone had trouble loading packages or accessing data.
+
 
 Before working with any data set, it is a good idea to understand what it contains.
 
