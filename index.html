@@ -29,27 +29,7 @@
 <a name = rmd><h1>Coding and Cookies</h1></a>
   <h2>R Basics</h2>
   <ul>
-    <!-- <li><a href="https://raw.githubusercontent.com/CSU-Stat-Lab/Coding-and-Cookies/main/CandC_R_Basics.Rmd" download><strong>CandC_R_Basics.Rmd</strong></a></li> -->
-    <li><a href="#" onclick="downloadRmd(); return false;">
-  <strong>Download CandC_R_Basics.Rmd</strong>
-</a></li>
-
-<script>
-async function downloadRmd() {
-  const response = await fetch('CSU-Stat-Lab/Coding-and-Cookies/main/CandC_R_Basics.Rmd');
-  const blob = await response.blob();
-
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = 'CandC_R_Basics.Rmd';
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-</script></li>
-
+    <li><a href="https://raw.githubusercontent.com/CSU-Stat-Lab/Coding-and-Cookies/main/CandC_R_Basics.Rmd" download><strong>CandC_R_Basics.Rmd</strong></a></li>
     <li><strong>Data for tutorial: <a href="combined.csv" download>combined.csv</a></strong></li>
 </ul>
 
