@@ -30,13 +30,13 @@
   <h2>R Basics</h2>
   <ul>
     <!-- <li><a href="https://raw.githubusercontent.com/CSU-Stat-Lab/Coding-and-Cookies/main/CandC_R_Basics.Rmd" download><strong>CandC_R_Basics.Rmd</strong></a></li> -->
-    <a href="#" onclick="downloadRmd(); return false;">
-  <li></li><strong>Download CandC_R_Basics.Rmd</strong>
-</a>
+    <li><a href="#" onclick="downloadRmd(); return false;">
+  <strong>Download CandC_R_Basics.Rmd</strong>
+</a></li>
 
 <script>
 async function downloadRmd() {
-  const response = await fetch('./CandC_R_Basics.Rmd');
+  const response = await fetch('CSU-Stat-Lab/Coding-and-Cookies/main/CandC_R_Basics.Rmd');
   const blob = await response.blob();
 
   const url = URL.createObjectURL(blob);
