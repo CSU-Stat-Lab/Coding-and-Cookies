@@ -56,7 +56,7 @@ Today we will learn how to use the `ggplot2` package to make (beautiful!) graphs
 <https://github.com/CSU-Stat-Lab/Coding-and-Cookies/>
 
 - `CandC_R_ggplot.Rmd`
-- ` surveys_complete.csv`
+- `surveys_complete_77_89.csv`
 
 Keeping the `.Rmd` and `.csv` files in the same exact folder will make importing data easier.
 
