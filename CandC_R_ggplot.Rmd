@@ -53,7 +53,7 @@ Today we will learn how to use the `ggplot2` package to make (beautiful!) graphs
 1.  Create a folder called `CandC_R_ggplot` somewhere on your computer.
 2.  Download workshop files and save them in your `CandC_R_gglot` folder (that you just created).
 
-<https://csu-stat-lab.github.io/Coding-and-Cookies/>
+<https://github.com/CSU-Stat-Lab/Coding-and-Cookies/>
 
 - `CandC_R_ggplot.Rmd`
 - ` surveys_complete.csv`
@@ -74,7 +74,6 @@ Data are stored as a data frame object in R.
 
 **Instructor**: show them where the data are to download and to where they should be downloaded.
 
-<https://csu-stat-lab.github.io/Coding-and-Cookies/>
 
 - **Rows**: observations of individual animals
 - **Columns**: Variables that describe the animals

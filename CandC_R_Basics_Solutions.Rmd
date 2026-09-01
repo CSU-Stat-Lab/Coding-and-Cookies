@@ -1,0 +1,934 @@
+---
+title: 'CSU Coding and Cookies: R Basics'
+output: html_document
+---
+
+# Welcome
+
+Welcome to **CSU Coding & Cookies: R Basics**!
+
+Today's session is designed for people who are brand new to R. Our goal is not to learn everything about R. Instead, we will learn enough to get started and to give you a foundation for learning more on your own.
+
+If you get stuck, please ask! We have instructors and helpers available.
+
+## Introductions
+
+**Instructor(s):** Introduce yourself.
+
+**Participants:** Tell us:
+
+- your name
+- department
+- why you want to learn R
+
+# Opening Example
+
+**Instructor**: before spending time on all the pieces of R, demonstrate what R can do with the following example.
+
+```{r}
+data(iris)
+
+boxplot(
+  Sepal.Length ~ Species,
+  data = iris
+)
+```
+
+In just a couple of lines, we asked R to take a data set (iris), use the boxplot() function to create a graph of one variable (Sepal.Length) vs another variable (Species).
+
+We don't need to understand every part of this code yet. By the end of the workshop, you will understand what these pieces mean.
+
+# Outline
+
+Today we will:
+
+- Get oriented to R, RStudio, and R Markdown
+- Create and work with objects
+- Use operators and functions
+- Work with data frames
+- Calculate summary statistics
+- Make simple graphs
+- Import data from a CSV file
+- Save our work
+
+**In Practice:** R can do much more! Later Coding & Cookies workshops will introduce topics such as tidy data and data visualization using the tidyverse.
+
+# Getting Started
+
+## Install R and R Studio
+
+Prior to this workshop you should have already installed both R and RStudio. If not, please do so now!
+
+For instructions, see: <https://csu-stat-lab.github.io/Coding-and-Cookies/>
+
+## Organize your files
+
+1.  Create a folder called `CandC_R_Basics` somewhere on your computer.
+
+2.  Download workshop files and save them in your `CandC_R_Basics` folder (that you just created).
+
+<https://github.com/CSU-Stat-Lab/Coding-and-Cookies/>
+
+- `CandC_R_Basics.Rmd`
+- `combined.csv`
+
+Keeping the `.Rmd` and `.csv` files in the same exact folder will make importing data easier.
+
+3.  Open `CandC_R_Basics.Rmd` in RStudio.
+
+- By double clicking on the .Rmd file, it should automatically open in R Studio.
+- Alternatively, you can open R Studio \> File \> Open File and navigate to the .Rmd file.
+
+**Instructor:**
+
+- Show the `.Rmd` and `.csv` files in the exact same folder.
+- Pause to see if anyone needs help opening the `.Rmd` file.
+
+# R, RStudio and R Markdown
+
+## Why is R so great?
+
+R is:
+
+- Free and open source
+
+- Powerful and flexible
+
+  - R can perform many different kinds of statistical analyses.
+  - Thousands of user-supplied packages extend what R can do.
+
+- Useful for reproducible research
+
+  - Command-line programming allows us to record exactly what we did.
+
+- Great for making graphics
+
+- Object-oriented
+
+  - R stores information in objects that can be manipulated with functions.
+
+**Today:** We will focus on learning a few basic ideas that will let you start using R.
+
+## What is R?
+
+R is a programming language and environment for statistical computing, data analysis, and graphics.
+
+When we write R code, we are giving instructions to R.
+
+For example:
+
+```{r}
+2 + 2
+```
+
+R evaluates the code and gives us a result.
+
+## What is RStudio?
+
+RStudio is a program that makes it easier to work with R.
+
+RStudio provides several panes that help us write code, run code, see our data, and find information.
+
+### Source Pane
+
+The Source pane is where we write and save code and R Markdown documents.
+
+### Console Pane
+
+The Console is where R actually executes commands.
+
+### Environment Pane
+
+The Environment shows objects that currently exist in our R session.
+
+### Files / Plots / Packages / Help Pane
+
+The lower-right pane contains several tabs that allow us to:
+
+- browse files
+- view plots
+- manage packages
+- search R's help documentation
+
+**Instructor:**
+
+- Point out each pane, especially console and environment.
+- Demonstrate the Save button.
+
+## What is R Markdown?
+
+An R Markdown (`.Rmd`) document combines:
+
+- text
+- R code
+- results
+
+in a single document.
+
+This document is an R Markdown document.
+
+R code is entered in code chunks (shaded).
+
+Text outside of a code chunk is ordinary text (not shaded).
+
+For example:
+
+```{r}
+2 + 2
+```
+
+The code above can be run directly from this document.
+
+**Today:** We will use R Markdown to write and run code live during the workshop.
+
+**Instructor:**
+
+- Show File \> New File \> R Markdown.
+- Briefly show the Visual tab.
+- If useful, show Help \> Markdown \> Quick Reference.
+- Do not spend time demonstrating knitting.
+
+## Example: Let's run some code!
+
+**Instructor: Demonstrate:**
+
+- Run one line of code using Ctrl-Enter on Windows or Command-Enter on Mac.
+- Run several lines of code.
+- Show that output appears in the Console.
+- Show that objects appear in the Environment.
+- Run an entire code chunk with the green play button.
+- Insert a new code chunk using the green `+C` button.
+- Demonstrate the keyboard shortcut Ctrl-Alt-I on Windows or Command-Option-I on Mac.
+
+Try the following:
+
+```{r}
+3 + 5
+
+weight_kg <- 55
+
+weight_kg
+
+weight_kg * 2.2
+
+weight_kg <- 57.5
+
+weight_lb <- weight_kg * 2.2
+
+weight_lb
+```
+
+Notice that:
+
+```{r}
+weight_kg <- 55
+```
+
+creates an object, but does not display the value.
+
+To see the value, type the object's name:
+
+```{r}
+weight_kg
+```
+
+## Practice: Create your own object
+
+Use the (blank) code chunk below to:
+
+1.  Create a variable called `fahr` and assign it the value `94`.
+2.  How can you tell that this worked?
+
+```{r}
+# 1.  Create a variable called `fahr` and assign it the value `94`.
+fahr <- 94
+
+# 2.  How can you tell that this worked?
+# print it out
+fahr
+```
+
+**Instructor:** Show the solution.
+
+# Objects, Operators and Functions
+
+## Objects
+
+Objects store information.
+
+For example:
+
+```{r}
+weight_kg <- 55
+```
+
+creates an object called `weight_kg` containing the value `55`.
+
+We can use that object later:
+
+```{r}
+weight_kg * 2.2
+```
+
+Objects can contain many different kinds of information, including numbers, text, and data.
+
+## Operators
+
+Operators tell R to perform an operation.
+
+### Arithmetic operators
+
+```{r}
+2 + 2
+4 * 4
+5 / 2
+3 - 1
+2^3
+```
+
+Common arithmetic operators are:
+
+| Operation      | Operator | Example |
+|----------------|----------|---------|
+| Addition       | `+`      | `2 + 2` |
+| Subtraction    | `-`      | `3 - 1` |
+| Multiplication | `*`      | `4 * 4` |
+| Division       | `/`      | `5 / 2` |
+| Exponentiation | `^`      | `2^3`   |
+
+### Assignment
+
+The assignment operator `<-` stores a value in an object.
+
+```{r}
+weight_kg <- 55
+```
+
+We can then use the object:
+
+```{r}
+weight_kg * 2.2
+```
+
+**Note:** The combination of symbols, `<-`, is used to assign the value on the right to the object name on the left.
+
+## Functions and arguments
+
+A *function* performs a task.
+
+Functions can take *arguments*, which provide information to the function.
+
+For example:
+
+```{r}
+sqrt(9)
+```
+
+Here:
+
+- `sqrt` is the function.
+- `9` is the argument.
+- The result is `3`.
+
+We can also assign the result of a function to an object:
+
+```{r}
+a <- 9
+
+b <- sqrt(a)
+
+b
+```
+
+R has many built-in functions.
+
+For example:
+
+```{r}
+round(3.14159)
+
+mean(c(1, 2, 3, 4, 5))
+```
+
+## Example: Working with a vector
+
+A vector is a collection of values.
+
+The `c()` function can be used to combine values:
+
+```{r}
+vec <- c(1, 2, 5, 6, 9, 10)
+
+vec
+```
+
+We can use functions with the vector:
+
+```{r}
+sqrt(vec)
+
+mean(vec)
+```
+
+Notice that `sqrt()` returns the square root of each value.
+
+`mean()` returns the average of the values.
+
+## Getting help
+
+R has extensive built-in help.
+
+To get help on the `mean()` function:
+
+- From the bottom right pane, Help tab, enter function name (mean) in very top search bar.\
+- This is equivalent to using code: `?mean`
+
+**Instructor:** Demonstrate how to search for a function in the Help tab.
+
+**Today:** If you don't remember how a function works, ask R!
+
+## Practice: Functions
+
+1.  Create a vector containing five numbers of your choice.
+2.  Print the vector.
+3.  Calculate its mean.
+4.  Calculate its square root.
+5.  Use `?mean` to look at the help page for `mean()`.
+
+```{r eval = FALSE}
+# 1.  Create a vector containing five numbers of your choice.
+vec <- c( 1, 5, 7, -3, 0 )
+
+# 2.  Print the vector.
+vec
+
+# 3.  Calculate its mean.
+mean( vec )
+
+# 4.  Calculate its square root.
+sqrt( vec )
+
+# 5.  Use `?mean` to look at the help page for `mean()`.
+?mean
+```
+
+# Working with Data
+
+## What is a data frame?
+
+A data frame is a rectangular collection of data.
+
+Think of it as a table:
+
+- Rows contain observations.
+- Columns contain variables.
+- Cells contain values.
+
+For example, a data set about plants might contain:
+
+| Sepal.Length | Sepal.Width | Petal.Length | Species    |
+|-------------:|------------:|-------------:|------------|
+|          5.1 |         3.5 |          1.4 | setosa     |
+|          4.9 |         3.0 |          1.4 | setosa     |
+|          7.0 |         3.2 |          4.7 | versicolor |
+
+Each row is an observation.
+
+Each column is a variable.
+
+## Example: Look at a data set
+
+R includes several data sets that are useful for learning.
+
+We will use the `iris` data set for demonstration (Anderson 1935; Fisher 1936; Becker 1988).
+
+```{r}
+data(iris)
+```
+
+We can look at the entire data set:
+
+```{r}
+View(iris)
+```
+
+We can also look at the structure of the data set:
+
+```{r}
+str(iris)
+```
+
+`str()` gives us information about:
+
+- the type of object
+- the number of observations
+- the number of variables
+- the names of the variables
+- the type of each variable
+
+**Instructor:**
+
+- Use the environment tab to show alternatives to View() and str().
+- Spend time talking through what the output tells us.
+
+Important habit:
+
+Whenever we import, create, or modify data, we want to look at the data!
+
+## Selecting a variable with `$`
+
+A data frame contains variables, or columns.
+
+The `$` operator lets us select a variable from a data frame.
+
+For example:
+
+```{r}
+iris$Sepal.Length
+```
+
+This codes selects the `Sepal.Length` variable from `iris` data frame.
+
+We can then use a function on that variable:
+
+```{r}
+mean(iris$Sepal.Length)
+```
+
+This code calculates the mean of `Sepal.Length` in the `iris` data frame.
+
+## Example: Summary statistics
+
+We can calculate summary statistics for variables in a data frame.
+
+```{r}
+mean(iris$Sepal.Length)
+
+sd(iris$Sepal.Length)
+
+summary(iris$Sepal.Length)
+```
+
+We can also calculate the correlation between two numeric variables:
+
+```{r}
+cor(iris$Sepal.Length, iris$Sepal.Width)
+```
+
+**Instructor:** Explain briefly what each result represents.
+
+The goal is not to memorize every function. The important idea is to practice common tasks.
+
+## Practice: Summary statistics
+
+0.  Create a code chunk below.
+(a) Easiest: use the green icon above with the $^+C$ and select `R`.
+(b) At the very beginning of one line add three backward apostrophes (usually above the Tab key; aka "backticks") followed by an open curly brace `{` the letter `r` and close curly brace `}`, then at the very beginning of a subsequent line, put three more backward apostrophes.
+
+Choose a numeric variable from `iris`.
+Calculate:
+
+1.  Its mean
+2.  Its standard deviation
+3.  Its summary statistics
+
+```{r}
+# Choose a numeric variable from `iris`.
+# Calculate:
+# 1.  Its mean
+mean( iris$Sepal.Length )
+
+# 2.  Its standard deviation
+sd( iris$Sepal.Length )
+
+# 3.  Its summary statistics
+summary( iris$Sepal.Length )
+```
+
+
+Then choose two numeric variables and calculate their correlation.
+
+**Instructor:** Encourage participants to choose different variables.
+
+## Example: Making a graph
+
+R can make many different kinds of graphs.
+
+For example, a scatter plot:
+
+```{r}
+plot(
+  Sepal.Length ~ Sepal.Width,
+  data = iris
+)
+```
+
+This graph shows the relationship between two numeric variables.
+
+We can also compare a numeric variable across groups:
+
+```{r}
+boxplot(
+  Sepal.Length ~ Species,
+  data = iris
+)
+```
+
+**Today:** We are using simple base R functions for graphing.
+
+**In Practice:** `ggplot2` is a powerful and widely used system for making graphics. We will explore it in the R Visualization workshop.
+
+## Practice: Make a graph
+
+1.  Create a scatter plot using two different numeric variables from `iris`.
+
+2.  Create a box plot comparing a numeric variable across `Species`.
+
+```{r}
+# 1.  Create a scatter plot using two different numeric variables from `iris`.
+plot( Petal.Width ~ Petal.Length, data = iris, col = "darkblue" )
+
+# 2.  Create a box plot comparing a numeric variable across `Species`.
+boxplot( Sepal.Length ~ Species, data = iris )
+
+## Fancier
+boxplot( Sepal.Length ~ Species, data = iris,
+         varwidth = TRUE, notch = TRUE, col = "darkblue")
+```
+
+
+**Instructor:** Give participants time to experiment with different variables.
+
+# Importing Data
+
+For this section, we will be using ecological survey data tracking small mammal populations over time available in the file `combined.csv` from the Stat Lab's github site <https://csu-stat-lab.github.io/Coding-and-Cookies/>.
+
+The data contain:
+
+- Month, day and year each animal was captured
+- Specific plot ID and type of plot/vegetation structure where the trap was placed
+- Taxonomy information
+- Biological metrics
+
+## Reading a CSV file
+
+CSV files are a common way to store rectangular data.
+
+The base R function `read.csv()` can read a CSV file into R.
+
+Our workshop folder contains a file called `combined.csv`.
+
+Because the `.Rmd` and `.csv` files are in the same folder, we can read the file using:
+
+```{r}
+dat <- read.csv("combined.csv")
+```
+
+**Instructor:**
+
+- Show `dat` in the environment.
+- Check if anyone had trouble importing the data.
+
+We can then inspect the data:
+
+```{r}
+str(dat)
+```
+
+And look at the first few rows:
+
+```{r}
+head(dat)
+```
+
+## Practice
+
+1.  Choose one numeric variable from `dat` and calculate its mean.
+2.  Make a simple graph using variables in the data set.
+
+```{r}
+# 1.  Choose one numeric variable from `dat` and calculate its mean.
+mean( dat$weight, na.rm = TRUE )
+
+# 2.  Make a simple graph using variables in the data set.
+boxplot( hindfoot_length ~ taxa + species, data = dat )
+```
+
+
+**Instructor:**
+
+- Help participants identify appropriate variables for their summary statistic and graph.
+- The data contain some `NA` values, be prepared to show `na.rm = TRUE`
+
+# Packages
+
+R packages extend what R can do.
+
+A package is a collection of functions, data, and other resources that can be installed and used in R.
+
+For example, later sessions will use packages from the `tidyverse` collection of packages to work with and visualize data.
+
+**Today:** We are using mostly functions that are already available in base R so that we can focus on the basic concepts.
+
+**In Practice:** Packages are one of the things that makes R so powerful. The R ecosystem contains thousands of packages for statistics, data management, visualization, modeling, and many other tasks.
+
+## Today vs. In Practice
+
+There are often several ways to accomplish the same task in R.
+
+For this introductory workshop, we are intentionally using simple approaches.
+
+The goal today is to learn the basic ideas that will make the more advanced approaches easier to understand.
+
+## Example: Installing and loading the package `extRemes`
+
+`extRemes` is a package with tools useful for analyzing extreme values, such as maxima and excesses over a high threshold.
+
+- First, install the package.
+  - This step needs to be done only once (unless you install a new version of R)
+
+```{r eval = FALSE}
+install.packages( "extRemes" )
+```
+
+- Second, load the package into your environment.
+  - This step must be performed for every new instance of R to use the package
+  - You will often get warnings about having a different version of R than that under which the package was last uploaded. These warnings can usually be ignored.
+
+```{r eval = FALSE}
+library( "extRemes" )
+```
+
+- Some packages, like `extRemes` have a help file for the package itself.
+  - Try typing extRemes into the search window of the help tab in the lower right pane.
+
+Some package developers spend a lot of time creating the packages, and in some cases they may need to demonstrate its impact, so always consider citing packages that you make use of in your published work. To cite a package, use `citation("pkgname")`. For example:
+
+```{r eval = FALSE}
+citation( "extRemes" )
+```
+
+- Note that it gives you both a text and bibtex version.
+- The R Core Team also wants you to cite R.
+  - to cite R, use `citation()`.
+
+# Saving Work and Exiting
+
+## Saving your Markdown file
+
+Save your `.Rmd` file regularly.
+
+Use:
+
+File \> Save
+
+or:
+
+- Ctrl-S on Windows
+- Command-S on Mac
+
+Your R code is saved in the `.Rmd` file.
+
+If you have written code in the document, you can return to it later and run it again.
+
+**Today:** We will save our work in the `.Rmd` file rather than focusing on saving an R workspace.
+
+## Save an RStudio Project
+
+**Instructor**: Demonstrate creating an RStudio Project.
+
+An RStudio Project helps organize the files associated with a project.
+
+From RStudio:
+
+File \> New Project \> Existing Directory
+
+Select the `CandC_R_Basics` folder.
+
+**In Practice:** For larger projects, creating an RStudio Project at the beginning of a project is often a useful habit.
+
+## Exiting R Studio
+
+- When you close R Studio, we recommend that you do NOT save the workspace (R objects).
+- As long as you save your `.Rmd` file you can easily recreate the workspace.
+- It is a good idea to close R studio at least once a week!
+
+# Need Help
+
+Learning R is an ongoing process. You do not need to memorize everything.
+
+Useful resources include:
+
+- CSU Statistics Laboratory (<https://statlab.colostate.edu/>)
+- R documentation and help pages
+- R cheat sheets (<https://opensource.posit.co/resources/cheatsheets/>)
+- CSU Libraries Coding Support Hub (<https://codingsupport.colostate.edu/r/>)
+- CSU Data Management Services (<https://lib.colostate.edu/services/data-management/>)
+
+# Advanced Topics (Optional!)
+
+**Instructor** If time is short, skip the Advanced section rather than rushing the hands-on exercises.
+
+These topics are useful to know, but they are not necessary for getting started with R. They can be demonstrated if time permits or left for participants to explore later.
+
+## Knitting
+
+R markdown files, like this one, can be "knitted" into an html web page, a Word document, or a pdf document. The resulting document can include the code chunks or not, or even include all of the code at the end of the knitted document. It is beyond the scope of this introduction to R and R Studio, but type knitr in the help finder window to see more information.
+
+## Factors
+
+Factors are used to represent categorical data.
+
+For example:
+
+```{r}
+sex <- factor(c("male", "female", "female", "male"))
+
+sex
+```
+
+We can look at the levels:
+
+```{r}
+levels(sex)
+```
+
+And count the number of levels:
+
+```{r}
+nlevels(sex)
+```
+
+Factors become particularly important when working with categorical variables in statistical analyses and graphics.
+
+**In Practice:** We will spend more time working with categorical variables and factors in the R Tidy Data workshop.
+
+## Sub-setting Data Frames
+
+The extraction operator `[]` can be used to select rows and columns from a data frame.
+
+**In Practice:** The tidyverse provides other approaches for selecting and manipulating data. These will be introduced in the R Tidy Data workshop.
+
+For example:
+
+```{r}
+iris[1, 1]
+```
+
+selects the value in the first row and first column.
+
+We can select rows:
+
+```{r}
+iris[1:10, ]
+```
+
+We can select columns:
+
+```{r}
+iris[, 1:3]
+```
+
+We can select both rows and columns:
+
+```{r}
+iris[1:10, 1:3]
+```
+
+The `$` notation is also useful:
+
+```{r}
+iris$Species
+```
+
+## Other R object types
+
+R can store information in many different kinds of objects.
+
+Some common types include:
+
+- vectors
+- matrices
+- factors
+- data frames
+- lists
+- functions
+
+For example:
+
+```{r}
+numbers <- c(1, 2, 3, 4, 5)
+
+numbers
+```
+
+A data frame is a collection of vectors of equal length:
+
+```{r}
+example <- data.frame(
+  name = c("A", "B", "C"),
+  score = c(10, 20, 30)
+)
+
+example
+```
+
+There is much more to learn about R's object system, but understanding objects as containers for information is enough to get started.
+
+## More advanced sub-setting
+
+The general row/column form for a data frame is `data[row, column]`
+
+For example:
+
+```{r}
+iris[1, 2]
+
+iris[1:3, ]
+
+iris[, 1:3]
+```
+
+Selecting by column name:
+
+```{r}
+iris[, "Species"]
+```
+
+Using `$`:
+
+```{r}
+iris$Species
+```
+
+These approaches are useful to know, but they are not necessary for the first hour of learning R.
+
+# References
+
+Anderson E (1935). “The Irises of the Gaspe Peninsula.” Bulletin of the American Iris Society, 59, 2–5.
+
+Becker RA, Chambers JM, Wilks AR (1988). The New S Language. Chapman and Hall/CRC, London. ISBN 053409192X. (Has iris3 as iris.)
+
+Fisher RA (1936). “The Use of Multiple Measurements in Taxonomic Problems.” Annals of Eugenics, 7(2), 179–188. <doi:10.1111/j.1469-1809.1936.tb02137.x>.
+
+------------------------------------------------------------------------
+
+## Instructor Notes: Suggested Teaching Approach
+
+The primary goal of this workshop is **confidence and practical experience**, not coverage.
+
+Prioritize having participants successfully:
+
+1.  Run their first R command.
+2.  Create an object.
+3.  Use a function.
+4.  Inspect a data set.
+5.  Select a variable using `$`.
+6.  Calculate a summary statistic.
+7.  Make a graph.
+8.  Import a CSV file.
+9.  Save their work.
+
+If participants are moving quickly, encourage experimentation with different variables and functions.
+
+The next Coding & Cookies workshops can introduce more sophisticated approaches using the tidyverse.

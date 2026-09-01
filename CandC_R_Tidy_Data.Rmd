@@ -50,7 +50,7 @@ The goal is to learn a small number of functions that can accomplish many common
 1.  Create a folder called `CandC_R_Tidy_Data` somewhere on your computer.
 2.  Download workshop files and save them in your `CandC_R_Tidy_Data` folder (that you just created).
 
-<https://csu-stat-lab.github.io/Coding-and-Cookies/>
+<https://github.com/CSU-Stat-Lab/Coding-and-Cookies/>
 
 - `CandC_R_Tidy_Data.Rmd`
 
