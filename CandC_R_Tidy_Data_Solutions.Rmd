@@ -58,7 +58,7 @@ The goal is to learn a small number of functions that can accomplish many common
 
 ## Load Packages
 
-`tidyverse` is loaded in the first code chunk of this `.Rmd` file.  Today, we will not require any further packages.
+`tidyverse` is loaded in the first code chunk of this `.Rmd` file. Today, we will not require any further packages.
 
 ## Load the data
 
@@ -71,14 +71,13 @@ data("biopics")
 
 ```
 
-## Check In 
+## Check In
 
 **Instructor:**
 
 - From Packages tab, show `dplyr` and `tidyr`loaded (checked)
 - Show `bipoics` in the environment.
 - Check if anyone had trouble loading packages or accessing data.
-
 
 Before working with any data set, it is a good idea to understand what it contains.
 
@@ -98,11 +97,25 @@ Notice that
 
 Answer the following questions.
 
-- What are these data about (hint: see the help file for the data set)? 
+- What are these data about (hint: see the help file for the data set)?
+
+**The raw data behind the story "'Straight Outta Compton' Is The Rare Biopic Not About White Dudes" <https://fivethirtyeight.com/features/straight-outta-compton-is-the-rare-biopic-not-about-white-dudes/>.**
+
 - How many observations are in the data set?
+
+**761**
+
 - How many variables?
+
+**14**
+
 - Which variables are numeric?
+
+**`box_office` (`year_release` and `number_of_subjects` are integer type)**
+
 - Which variables are character?
+
+**`title`, `site`, `country`, `director`, `subject`, `type_of_subject`, `race_known`, `subject_race`, `subject_sex`, `lead_actor_actress`**
 
 # The dplyr verbs
 
@@ -119,7 +132,7 @@ Some of the most useful are
 
 These functions all take a data frame (or tibble) as input and return another tibble.
 
-A `data.frame` object is the primary data structure from base R.  A `tibble` object is very similar, but is part of `tidyverse`.
+A `data.frame` object is the primary data structure from base R. A `tibble` object is very similar, but is part of `tidyverse`.
 
 # Filtering Rows
 
@@ -148,21 +161,21 @@ Notice that
 
 Common comparison operators include
 
-|Operator|Meaning|
-|---------|-------|
-|`==`|equal to|
-|`!=`|not equal to|
-|`>`|greater than|
-|`<`|less than|
-|`>=`|greater than or equal|
-|`<=`|less than or equal|
+| Operator | Meaning               |
+|----------|-----------------------|
+| `==`     | equal to              |
+| `!=`     | not equal to          |
+| `>`      | greater than          |
+| `<`      | less than             |
+| `>=`     | greater than or equal |
+| `<=`     | less than or equal    |
 
 ### Your Turn
 
 Create a data frame called `biopCan` containing only movies from Canada.
 
 ```{r}
-
+biopCan <- filter( biopics, country == "Canada")
 ```
 
 ### Your Turn
@@ -170,7 +183,7 @@ Create a data frame called `biopCan` containing only movies from Canada.
 Create a data frame containing only movies released after 2010.
 
 ```{r}
-
+biop2010 <- filter( biopics, year_release > 2010 )
 ```
 
 # Selecting Columns
@@ -200,7 +213,8 @@ Create a data frame containing only
 - box_office
 
 ```{r}
-
+biopSmall <- select( biopics, title, lead_actor_actress, box_office )
+head( biopSmall )
 ```
 
 # Combining Operations with the Pipe
@@ -213,7 +227,7 @@ The pipe sends the output from one step into the next step.
 
 Instead of
 
-```r
+``` r
 x <- filter(...)
 y <- select(x,...)
 ```
@@ -239,7 +253,10 @@ Write a pipeline that
 - selects only the title and box office columns
 
 ```{r}
-
+tmp <- biopics |>
+  filter( country == "Canada" ) |>
+  select( title, box_office )
+head( tmp )
 ```
 
 # Creating New Variables
@@ -263,7 +280,8 @@ The original variables remain, and a new column is added.
 Create a variable called `box_millions` that equals `box_office/1000000` and add it to the biopics data frame.
 
 ```{r}
-
+biopics <- biopics |>
+  mutate( box_millions = box_office/1000000)
 ```
 
 # Grouping Data
@@ -314,7 +332,11 @@ Calculate
 for each value of `subject_sex`.
 
 ```{r}
-
+biopics |>
+  drop_na( box_office ) |>
+  group_by( subject_sex ) |>
+  summarize( Mean = mean( box_office ),
+             n = n() ) 
 ```
 
 # Sorting Results
@@ -338,7 +360,13 @@ The country with the largest average box office now appears first.
 Arrange the countries from smallest to largest average box office.
 
 ```{r}
-
+biopics |>
+    drop_na(box_office) |>
+    group_by(country) |>
+    summarize(
+        Mean=mean(box_office)
+    ) |>
+    arrange(Mean)
 ```
 
 # Reshaping Data
@@ -418,4 +446,3 @@ Useful resources include:
 - R cheat sheets (<https://opensource.posit.co/resources/cheatsheets/>)
 - CSU Libraries Coding Support Hub (<https://codingsupport.colostate.edu/r/>)
 - CSU Data Management Services (<https://lib.colostate.edu/services/data-management/>)
-
